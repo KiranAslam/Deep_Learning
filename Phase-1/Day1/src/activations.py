@@ -5,6 +5,6 @@ class sigmoid:
     def forward(z):
         return 1/(1 + np.exp(-z))
     @staticmethod
-    def bacward(z):
-        s=Sigmoid.forward(z)
+    def backward(z):
+        s=sigmoid.forward(z)
         return s*(1-s)
