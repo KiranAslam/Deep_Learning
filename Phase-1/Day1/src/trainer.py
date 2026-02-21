@@ -21,3 +21,5 @@ class Trainer:
             if epoch % 100 ==0:
                 print(f"Epoch : {epoch} | loss: {loss:.4f}")
         return self.loss_history
+
+
