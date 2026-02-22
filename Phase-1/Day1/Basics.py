@@ -1,3 +1,4 @@
+import numpy as np 
 '''
 #Single neuron with 3 inputs and one output
 input=[1,2,3]
@@ -51,7 +52,7 @@ bias=2
 output=np.dot(weights,inputs)+bias
 print(output)
 '''
-import numpy as np 
+
 # dot product of layers of neuron
 inputs=[1,2,3,4]
 weights=[[0.2,0.3,0.4,0.6],
