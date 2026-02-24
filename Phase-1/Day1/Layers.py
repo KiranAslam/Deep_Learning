@@ -4,11 +4,8 @@ from nnfs.datasets import spiral_data
 
 nnfs.init()   #for creating data 
 
-X=[[1,2,3,2.5],
-        [2.0,5.0,-1.0,2.0],
-        [-1.5,2.7,3.3,-0.8]]
 
-X,y=spiral_data(100,3)
+X,y=spiral_data(samples=100,classes=3)
 
 
 class Dense_Layer:
@@ -23,13 +20,23 @@ class Activation_ReLU:
     def forward(self,inputs):
         self.output= np.maximum(0,inputs)
 
+class Activation_softmax:
+    def forward(self,inputs):
+        exp_values=np.exp(inputs-np.max(inputs,axis=1,keepdims=True))
+        probabilities=exp_values/np.sum(exp_values,axis=1,keepdims=True)
+        self.output=probabilities
 
-Layer1=Dense_Layer(2,5)
+
+Layer1=Dense_Layer(2,3)
 activation1=Activation_ReLU()
 Layer1.forward(X)
 activation1.forward(Layer1.output)
-print(activation1.output)
+print("====ReLU activation=====")
+print(activation1.output[:5])
 
-#Layer2=Dense_Layer(5,2)
-#Layer2.forward(Layer1.output)
-#print(Layer2.output)
+Layer2=Dense_Layer(3,3)
+Activation2=Activation_softmax()
+Layer2.forward(Layer1.output)
+Activation2.forward(Layer2.output)
+print("====Softmax_activation====")
+print(Activation2.output[:5])
