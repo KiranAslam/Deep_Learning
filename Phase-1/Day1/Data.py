@@ -13,9 +13,3 @@ def create_data(points,classes):
         y[ix]=class_number
     return X,y
 
-print("Here")
-X,y=create_data(100,3)
-plt.scatter(X[:,0],X[:,1])
-plt.show()
-plt.scatter(X[:,0],X[:,1],c=y,s=40,cmap='brg')
-plt.show()
