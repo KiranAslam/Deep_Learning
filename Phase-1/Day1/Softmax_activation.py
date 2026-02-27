@@ -2,11 +2,10 @@ import numpy as np
 import math
 import nnfs
 nnfs.init()
-'''
+
 layer_outputs=[4.8,1.21,2.385]
 #layer_outputs=[4.8,4.79,4.25]
 #E=2.7182828
-
 #Raw python way 
 E=math.e
 exp_value=[]
@@ -29,7 +28,6 @@ print(exp_values)
 print(sum(norm_value))
 
 #exponentiation+normalization=softmax activation
-'''
 
 Layer_outputs=[[4.8,1.21,2.385],
                [8.5,1.2,0.25],
