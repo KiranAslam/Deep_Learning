@@ -27,7 +27,8 @@ class BreastCancerDataset:
 class Sigmoid:
     @staticmethod
     def forward(z):
-        return 1/(1+np.exp(-z,-500,500))
+        z_clipped = np.clip(z, -500, 500)
+        return 1/(1+np.exp(-z_clipped))
     @staticmethod
     def backward(z):
         s=Sigmoid.forward(z)
@@ -38,15 +39,10 @@ class BinaryCrossEntropy:
         eps=1e-15
         y_pred = np.clip(y_pred, eps, 1 - eps)
         return -np.mean(y_true*np.log(y_pred)+ (1-y_true)*np.log(1-y_pred))
-    @staticmethod
-    def backward(y_true,y_pred):
-        eps=1e-15
-        y_pred= np.clip(y_pred,eps,1-eps)
-        return (y_pred-y_true)/((y_pred)*(1-y_pred))
 
 class Perceptron:
     def __init__(self,input_features):
-        self.w=np.random.rand(input_features,1)*0.01
+        self.w=np.random.randn(input_features,1)*0.01
         self.b=np.zeros((1,1))
         self.X=None
         self.A=None
@@ -58,9 +54,9 @@ class Perceptron:
         self.Z=np.dot(X,self.w)+self.b
         self.A=Sigmoid.forward(self.Z)
         return self.A
-    def backward(self,dA):
+    def backward(self,y_true):
         m=self.X.shape[0]
-        dz=dA*Sigmoid.backward(self.Z)
+        dz = self.A - y_true
         self.dw=(1/m)*np.dot(self.X.T,dz)
         self.db=(1/m)*np.sum(dz,axis=0, keepdims=True)
         return dz
@@ -82,8 +78,8 @@ class Trainer:
             y_pred=self.Model.forward(X)
             loss=self.loss_fn.forward(y,y_pred)
             self.history_loss.append(loss)
-            dA=self.loss_fn.backward(y,y_pred)
-            self.Model.backward(dA)
+           
+            self.Model.backward(y)
             self.Model.update(self.lr)
 
             if epoch%100==0:
