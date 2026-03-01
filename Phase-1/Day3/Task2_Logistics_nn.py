@@ -99,9 +99,4 @@ print(f"\nFinal Test Accuracy: {accuracy * 100:.2f}%")
 print("Predictions:")
 print(preds)
 
-plt.plot(history_loss)
-plt.title("Single Neuron training")
-plt.xlabel("Epoches")
-plt.ylabel("loss")
-plt.show()
   
