@@ -104,3 +104,4 @@ plt.title("Single Neuron training")
 plt.xlabel("Epoches")
 plt.ylabel("loss")
 plt.show()
+  
