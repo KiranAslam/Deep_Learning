@@ -63,7 +63,6 @@ class Trainer:
             if epoch%100==0:
                 print(f"Epoch {epoch}, Loss: {loss:.4f}")
         return self.history_loss
-
 y=y.reshape(-1,1)
 model=Perceptron(input_features=2)
 trainer=Trainer(Model=model,loss_fn=BinaryCrossEntropy,lr=0.1)
