@@ -24,6 +24,7 @@ class BreastCancerDataset:
             random_state=self.random_state)
         X_train,X_test=self.normalize(X_train,X_test)
         return X_train,X_test,y_train,y_test
+        
 class Sigmoid:
     @staticmethod
     def forward(z):
