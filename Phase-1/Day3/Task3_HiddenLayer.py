@@ -110,10 +110,8 @@ class Trainer:
                  print(f"Epoch: {epoch} |  Loss: {loss:.4f}")
         return self.loss_history
 
- 
 dataset = Iris_dataset()
 X_train, X_test, y_train, y_test = dataset.get_data()
-
 model = Neural_Network()
 trainer=Trainer(model=model,loss_fn=CategoricalCrossEntropy,lr=0.1)
 loss_history=trainer.Train(X_train,y_train,epochs=4000)
@@ -121,7 +119,6 @@ preds=model.predict(X_test)
 y_true = np.argmax(y_test, axis=1)
 Accuracy=np.mean(preds==y_true)
 print(f"Accuracy:{Accuracy*100:.2f}%")
-
 plt.plot(loss_history)
 plt.title("Multi Layer perceptron")
 plt.xlabel("Epoches")
