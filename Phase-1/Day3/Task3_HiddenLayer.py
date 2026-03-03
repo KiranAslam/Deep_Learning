@@ -41,7 +41,7 @@ class Softmax:
 class CategoricalCrossEntropy:
     
     @staticmethod
-    def forward(self,y_true,y_pred):
+    def forward(y_true,y_pred):
         eps=1e-15
         y_pred=np.clip(y_pred,eps,1-eps)
         return -np.mean(np.sum(y_true*np.log(y_pred),axis=1))
@@ -98,17 +98,17 @@ class Trainer:
         self.loss_fn=loss_fn
         self.lr=lr
         self.loss_history=[]
-    def Train(self,X,y,epochs=2000):
+    def Train(self,X,y,epochs=4000):
         for epoch in range(epochs):
             y_pred=self.model.forward(X)
             loss=self.loss_fn.forward(y,y_pred)
             self.loss_history.append(loss)
 
             self.model.backward(y)
-            self.backward.update(self.lr)
-            if epoch%100 == 0:
-                 print(f"Epoch: {epochs} |  Loss: {loss}")
-            return self.loss_history
+            self.model.update(self.lr)
+            if epoch%200 == 0:
+                 print(f"Epoch: {epoch} |  Loss: {loss:.4f}")
+        return self.loss_history
 
  
 dataset = Iris_dataset()
@@ -116,9 +116,10 @@ X_train, X_test, y_train, y_test = dataset.get_data()
 
 model = Neural_Network()
 trainer=Trainer(model=model,loss_fn=CategoricalCrossEntropy,lr=0.1)
-loss_history=trainer.Train(X_train,y_train,epochs=2000)
-preds=model.predicts(X_test)
-Accuracy=np.mean(preds==y_test)
+loss_history=trainer.Train(X_train,y_train,epochs=4000)
+preds=model.predict(X_test)
+y_true = np.argmax(y_test, axis=1)
+Accuracy=np.mean(preds==y_true)
 print(f"Accuracy:{Accuracy*100:.2f}%")
 
 plt.plot(loss_history)
