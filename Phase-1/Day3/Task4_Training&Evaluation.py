@@ -169,3 +169,11 @@ plt.ylabel("Loss")
 plt.legend()
 plt.show()
 
+plt.plot(trainer.train_accuracy, label="Train Accuracy")
+plt.plot(trainer.test_accuracy, label="Test Accuracy")
+plt.title("Accuracy Curve")
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.show()
+
