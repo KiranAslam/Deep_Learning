@@ -148,6 +148,24 @@ class Trainer:
 
         return self.train_loss, self.test_loss
 
-
-  
+dataset = Iris_dataset()
+X_train, X_test, y_train, y_test = dataset.get_data()
+model = Neural_Network()
+trainer = Trainer(model=model, loss_fn=CategoricalCrossEntropy, lr=0.1)
+train_loss, test_loss = trainer.Train(
+    X_train, y_train,
+    X_test, y_test,
+    epochs=4000
+)
+preds=model.predict(X_test)
+y_true = np.argmax(y_test, axis=1)
+Accuracy=np.mean(preds==y_true)
+print(f"Accuracy:{Accuracy*100:.2f}%")
+plt.plot(trainer.train_loss, label="Train Loss")
+plt.plot(trainer.test_loss, label="Test Loss")
+plt.title("Loss Curve")
+plt.xlabel("Epochs")
+plt.ylabel("Loss")
+plt.legend()
+plt.show()
 
