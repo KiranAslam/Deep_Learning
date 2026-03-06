@@ -93,87 +93,38 @@ class Neural_Network:
         probs=self.forward(X)
         return np.argmax(probs,axis=1)
 class Trainer:
-    def __init__(self, model, loss_fn, lr=0.01):
-        self.model = model
-        self.loss_fn = loss_fn
-        self.lr = lr
-        
-        self.train_loss = []
-        self.test_loss = []
-        self.train_accuracy = []
-        self.test_accuracy = []
+    def __init__(self,model,loss_fn,lr=0.01):
+        self.model=model
+        self.loss_fn=loss_fn
+        self.lr=lr
 
-    def accuracy(self, preds, y_true):
-        y_true = np.argmax(y_true, axis=1)
-        return np.mean(preds == y_true)
+        self.train_loss=[]
+        self.test_loss=[]
+        self.train_acc=[]
+        self.test_acc=[]
 
-    def Train(self, X_train, y_train, X_test, y_test, epochs=4000):
-
-        for epoch in range(epochs):
-
-            # -------- Forward Train --------
-            y_pred = self.model.forward(X_train)
-            loss = self.loss_fn.forward(y_train, y_pred)
-
-            # -------- Backprop --------
-            self.model.backward(y_train)
+    def Accuracy(self,preds,y_true):
+        y_true=np.argmax(y_true,axis=1)
+        return np.mean(preds==y_true)
+    def Train(self,X_Train,y_Train,X_test,y_test,epochs=4000):
+        for epoch in epochs:
+            #Forward
+            y_pred=self.model.forward(X_Train)
+            loss=self.loss_fn.forward(y_Train,y_pred)
+            #Backward
+            self.model.backward(y_Train)
             self.model.update(self.lr)
+            #Train accuracy
+            train_preds=self.model.predict(X_Train)
+            train_accuracy=self.Accuracy(train_preds,y_Train)
+            #Test evaluation
+            test_preds_probs=sef.model.forward(X_test)
+            test_loss=self.loss_fn.forward(y_test,test_preds_probs)
 
-            # -------- Train Accuracy --------
-            train_preds = self.model.predict(X_train)
-            train_acc = self.accuracy(train_preds, y_train)
+            test_preds=np.argmax(test_preds_probs,axis=1)
+            test_accuracy=self.Accuracy(test_preds,y_test)
 
-            # -------- Test Evaluation --------
-            test_pred_probs = self.model.forward(X_test)
-            test_loss = self.loss_fn.forward(y_test, test_pred_probs)
-
-            test_preds = np.argmax(test_pred_probs, axis=1)
-            test_acc = self.accuracy(test_preds, y_test)
-
-            # -------- Store History --------
             self.train_loss.append(loss)
             self.test_loss.append(test_loss)
-            self.train_accuracy.append(train_acc)
-            self.test_accuracy.append(test_acc)
-
-            # -------- Print Progress --------
-            if epoch % 200 == 0:
-                print(
-                    f"Epoch {epoch} | "
-                    f"Train Loss: {loss:.4f} | "
-                    f"Test Loss: {test_loss:.4f} | "
-                    f"Train Acc: {train_acc*100:.2f}% | "
-                    f"Test Acc: {test_acc*100:.2f}%"
-                )
-
-        return self.train_loss, self.test_loss
-
-dataset = Iris_dataset()
-X_train, X_test, y_train, y_test = dataset.get_data()
-model = Neural_Network()
-trainer = Trainer(model=model, loss_fn=CategoricalCrossEntropy, lr=0.1)
-train_loss, test_loss = trainer.Train(
-    X_train, y_train,
-    X_test, y_test,
-    epochs=4000
-)
-preds=model.predict(X_test)
-y_true = np.argmax(y_test, axis=1)
-Accuracy=np.mean(preds==y_true)
-print(f"Accuracy:{Accuracy*100:.2f}%")
-plt.plot(trainer.train_loss, label="Train Loss")
-plt.plot(trainer.test_loss, label="Test Loss")
-plt.title("Loss Curve")
-plt.xlabel("Epochs")
-plt.ylabel("Loss")
-plt.legend()
-plt.show()
-
-plt.plot(trainer.train_accuracy, label="Train Accuracy")
-plt.plot(trainer.test_accuracy, label="Test Accuracy")
-plt.title("Accuracy Curve")
-plt.xlabel("Epochs")
-plt.ylabel("Accuracy")
-plt.legend()
-plt.show()
-
+            self.train_acc.append(train_accuracy)
+            self.test_acc.append(test_accuracy)
