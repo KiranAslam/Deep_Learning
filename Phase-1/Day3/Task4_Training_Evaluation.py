@@ -128,3 +128,13 @@ class Trainer:
             self.test_loss.append(test_loss)
             self.train_acc.append(train_accuracy)
             self.test_acc.append(test_accuracy)
+
+            if epoch % 200==0:
+                print(
+                    f"Epoch {epoch} | "
+                    f"Train Loss: {loss:.4f} | "
+                    f"Test Loss: {test_loss:.4f} | "
+                    f"Train Acc: {train_accuracy*100:.2f}% | "
+                    f"Test Acc: {test_accuracy*100:.2f}%"   
+                )
+        return self.train_loss,self.test_loss
