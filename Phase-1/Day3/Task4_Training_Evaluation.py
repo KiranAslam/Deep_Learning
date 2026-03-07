@@ -107,7 +107,7 @@ class Trainer:
         y_true=np.argmax(y_true,axis=1)
         return np.mean(preds==y_true)
     def Train(self,X_Train,y_Train,X_test,y_test,epochs=4000):
-        for epoch in epochs:
+        for epoch in range(epochs):
             #Forward
             y_pred=self.model.forward(X_Train)
             loss=self.loss_fn.forward(y_Train,y_pred)
@@ -118,7 +118,7 @@ class Trainer:
             train_preds=self.model.predict(X_Train)
             train_accuracy=self.Accuracy(train_preds,y_Train)
             #Test evaluation
-            test_preds_probs=sef.model.forward(X_test)
+            test_preds_probs=self.model.forward(X_test)
             test_loss=self.loss_fn.forward(y_test,test_preds_probs)
 
             test_preds=np.argmax(test_preds_probs,axis=1)
@@ -138,3 +138,34 @@ class Trainer:
                     f"Test Acc: {test_accuracy*100:.2f}%"   
                 )
         return self.train_loss,self.test_loss
+
+dataset=Iris_dataset()
+X_train, X_test, y_train, y_test=dataset.get_data()
+model=Neural_Network()
+trainer=Trainer(model=model,loss_fn=CategoricalCrossEntropy,lr=0.01)
+train_loss,test_loss=trainer.Train(
+    X_train,y_train,
+    X_test,y_test,
+    epochs=4000
+)
+
+preds=model.predict(X_test)
+y_true=np.argmax(y_test,axis=1)
+Accuracy=np.mean(preds==y_true)
+print(f"Accuracy: {Accuracy*100:.2f}%")
+
+plt.plot(trainer.train_loss, label="Train loss")
+plt.plot(trainer.test_loss, label="Test Loss")
+plt.title("Loss Curve")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.legend()
+plt.show()
+
+plt.plot(trainer.train_acc,label="Training Accuracy")
+plt.plot(trainer.test_acc,label="Test Accuracy")
+plt.title("Accuracy Curve")
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.show()
