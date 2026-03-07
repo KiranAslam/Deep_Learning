@@ -8,7 +8,7 @@ class Iris_dataset:
         self.test_size=test_size
         self.random_state=random_state
         data=sklearn.datasets.load_iris()
-        self.X=data.data[2:, :2]
+        self.X=data.data[:, :2]
         self.y=data.target.reshape(-1,1)
 
     def normalize(self,X_train,X_test):
@@ -184,7 +184,7 @@ plt.legend()
 plt.show()
 
 plt.plot(trainer.train_acc,label="Training Accuracy")
-plt.plot(trainer.test_acc,abel="Test Accuracy")
+plt.plot(trainer.test_acc,label="Test Accuracy")
 plt.title("Accuracy Curve")
 plt.xlabel("Epochs")
 plt.ylabel("Accuracy")
