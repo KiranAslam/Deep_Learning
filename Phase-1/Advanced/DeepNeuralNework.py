@@ -90,13 +90,13 @@ class DeepNeuralNetwork:
     def forward(self,X):
         self.X=X
         self.Z1=np.dot(X,self.w1)+self.b1
-        self.A1=ReLU.forward(Z1)
+        self.A1=ReLU.forward(self.Z1)
 
         self.Z2=np.dot(self.A1,self.w2)+self.b2
-        self.A2=ReLU.forward(Z2)
+        self.A2=ReLU.forward(self.Z2)
 
         self.Z3=np.dot(self.A2,self.w3)+self.b3
-        self.A3=Softmax.forward(Z3)
+        self.A3=Softmax.forward(self.Z3)
 
         return self.A3
 
@@ -113,7 +113,7 @@ class DeepNeuralNetwork:
 
         dA1=np.dot(dZ2,self.w2.T)
         dZ1=dA1*(self.Z1>0)
-        dw1=(1/m)*np.dot(x.T,dZ1)
+        dw1=(1/m)*np.dot(self.X.T,dZ1)
         db1=(1/m)*np.sum(dZ1,axis=0,keepdims=True)
         self.dw3 = dw3
         self.db3 = db3
@@ -122,16 +122,62 @@ class DeepNeuralNetwork:
         self.dw1 = dw1
         self.db1 = db1
     def update(self,lr=0.01):
-        self.w3 -= lr*dw3
-        self.b3 -= lr*db3
-        self.w2 -= lr*db2
-        self.b2 -= lr*db2
-        self.w1 -= lr*dw1
-        self.b1 -= lr*db1
+        self.w3 -= lr*self.dw3
+        self.b3 -= lr*self.db3
+        self.w2 -= lr*self.dw2
+        self.b2 -= lr*self.db2
+        self.w1 -= lr*self.dw1
+        self.b1 -= lr*self.db1
 
     def predict(self,X):
         probs=self.forward(X)
         return np.argmax(probs,axis=1)
+
+class Trainer:
+    def __init__(self,model,dataset,lr=0.01,epochs=20,batch_size=64):
+
+        self.model = model
+        self.dataset = dataset
+        
+        self.lr = lr
+        self.epochs = epochs
+        self.batch_size = batch_size
+        
+        self.train_losses = []
+        self.val_losses = []
+        self.train_acc = []
+        self.val_acc = []
+
+    def get_batches(self,X,y):
+        n=X.shape[0]
+        indices=np.arange(n)
+        np.random.shuffle(indices)
+
+        for start in range(0,n,self.batch_size):
+            end=start+self.batch_size 
+            batch_indices=indices[start:end]
+            yield X[batch_indices], y[batch_indices]    
+    def Accuracy(self,y_true,y_pred):
+        y_true=np.argmax(y_true,axis=1)
+        return np.mean(y_true==y_pred)
+    def train(self):
+        X_train,y_train=self.dataset.train_data()
+        X_val,y_val=self.dataset.vald_data()
+
+        for epoch in range(self.epochs):
+            epoch_loss=0
+            batch_count=0
+
+            for X_batch,y_batch in self.get_batches(X_train,y_train):
+                probs=self.model.forward(X_batch)
+                loss=CrossEntropyLoss.forward(y_batch,probs)
+                epoch_loss += loss
+
+                self.model.backward(y_batch)
+                self.model.update(self.lr)
+
+                batch_count +=1
+                
 
 
 
