@@ -39,12 +39,17 @@ class Softmax:
         probabilities=exp_values/np.sum(exp_values,axis=1,keepdims=True)
         return probabilities
 class CategoricalCrossEntropy:
-    
     @staticmethod
     def forward(y_true,y_pred):
         eps=1e-15
         y_pred=np.clip(y_pred,eps,1-eps)
         return -np.mean(np.sum(y_true*np.log(y_pred),axis=1))
+class BinaryCrossEntropy:
+    @staticmethod
+    def forward(y_true,y_pred):
+        eps=1e-15
+        y_pred=np.clip(y_pred,eps,1-eps)
+        return -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
 
 class Neural_Network:
     def __init__(self,input_size=4,hidden_size=8,output_size=3):
@@ -109,20 +114,21 @@ class Trainer:
             if epoch%200 == 0:
                  print(f"Epoch: {epoch} |  Loss: {loss:.4f}")
         return self.loss_history
+if __name__ == "__main__":
+    dataset = Iris_dataset()
+    X_train, X_test, y_train, y_test = dataset.get_data()
+    model = Neural_Network()
+    trainer=Trainer(model=model,loss_fn=CategoricalCrossEntropy,lr=0.1)
+    loss_history=trainer.Train(X_train,y_train,epochs=4000)
+    preds=model.predict(X_test)
+    y_true = np.argmax(y_test, axis=1)
+    Accuracy=np.mean(preds==y_true)
+    print(f"Accuracy:{Accuracy*100:.2f}%")
+    plt.plot(loss_history)
+    plt.title("Multi Layer perceptron")
+    plt.xlabel("Epoches")
+    plt.ylabel("loss")
+    plt.show()
 
-dataset = Iris_dataset()
-X_train, X_test, y_train, y_test = dataset.get_data()
-model = Neural_Network()
-trainer=Trainer(model=model,loss_fn=CategoricalCrossEntropy,lr=0.1)
-loss_history=trainer.Train(X_train,y_train,epochs=4000)
-preds=model.predict(X_test)
-y_true = np.argmax(y_test, axis=1)
-Accuracy=np.mean(preds==y_true)
-print(f"Accuracy:{Accuracy*100:.2f}%")
-plt.plot(loss_history)
-plt.title("Multi Layer perceptron")
-plt.xlabel("Epoches")
-plt.ylabel("loss")
-plt.show()
   
 
