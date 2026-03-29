@@ -3,7 +3,7 @@ import numpy as np
 import random
 import json
 
-# --- 1. CSV File Banayein (Transaction Data) ---
+
 n_rows = 1000
 data_csv = {
     'Customer_ID': [f'CUST_{i}' for i in range(1, n_rows + 1)],
@@ -14,8 +14,7 @@ data_csv = {
 df_csv = pd.DataFrame(data_csv)
 df_csv.to_csv('Main_Data.csv', index=False)
 
-# --- 2. JSON File Banayein (Customer Details) ---
-# Sirf 800 customers rakhenge taake Join ke waqt 200 missing ho jayein
+
 customer_details = []
 for i in range(1, 801):
     customer_details.append({
