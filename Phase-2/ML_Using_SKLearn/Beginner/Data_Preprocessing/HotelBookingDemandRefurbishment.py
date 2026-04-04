@@ -97,3 +97,10 @@ print("Logistic Regression Classification Report:")
 print(f"Accuracy: {accuracy_score(y_test, lr_predictions)* 100 : .2f}%")
 print(classification_report(y_test, lr_predictions))
 
+rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+rf_model = rf_model.fit(x_train_scaled, y_train)
+rf_predictions = rf_model.predict(x_test_scaled)
+
+print("Random Forest Classification Report:")
+print(f"Accuracy: {accuracy_score(y_test, rf_predictions)* 100 : .2f}%")
+print(classification_report(y_test, rf_predictions))
