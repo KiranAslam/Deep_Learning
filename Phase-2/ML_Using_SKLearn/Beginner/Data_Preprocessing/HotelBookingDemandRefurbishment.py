@@ -3,6 +3,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.ensemble import RandomForestClassifier
 
 df = pd.read_csv('hotel_bookings.csv')
 #print(df.info())
@@ -30,11 +34,7 @@ df['arrival_year_date_month_num'] = df['arrival_date_month'].map(month_map)
 df['arrival_date'] = pd.to_datetime(df[['arrival_date_year', 'arrival_year_date_month_num', 'arrival_date_day_of_month']].astype(str).agg('-'.join, axis=1))
 print(df[['Total_stays', 'arrival_date', 'Total_guests']].head())
 
-print(df.info())
-#print(df.describe())
-print(df.head(15))
-print(f"Missing values: {df.isnull().sum()}")
-print(f"duplicated values: {df.duplicated().sum()}")
+
 
 plt.figure(figsize=(10,6))
 sns.countplot(data=df, x='hotel', hue='is_canceled', palette='magma')
@@ -72,10 +72,28 @@ plt.title("Boxplot of Average Daily Rate by Hotel")
 
 df.drop(columns=['arrival_date_year', 'arrival_date_month', 'arrival_date_day_of_month'], inplace=True)
 df=pd.get_dummies(df,columns=['hotel', 'meal', 'market_segment', 'distribution_channel', 'reserved_room_type', 'assigned_room_type', 'deposit_type', 'customer_type'], drop_first=True)
-X= df.drop(columns=['is_canceled','arrival_date'])
+X= df.drop(columns=['is_canceled','arrival_date', 'country','reservation_status'])
 y=df['is_canceled']
+X = X.astype(float)
+print(df.info())
+print(df.head(15))
+print(f"Missing values: {df.isnull().sum()}")
+print(f"duplicated values: {df.duplicated().sum()}")
 
 x_train, x_test,y_train, y_test = train_test_split(X,y, test_size=0.2, random_state=42)
 print(f"Total data: {X.shape[0]}")
 print(f"Training data: {x_train.shape[0]}")
 print(f"Testing data: {x_test.shape[0]}")
+
+scalar = StandardScaler()
+x_train_scaled = scalar.fit_transform(x_train)
+x_test_scaled = scalar.transform(x_test)
+
+Lr_model = LogisticRegression()
+lr_model = lr_model.fit(x_train_scaled, y_train)
+lr_predictions = lr_model.predict(x_test_Scaled)
+
+print("Logistic Regression Classification Report:")
+print(f"Accuracy: {accuracy_score(y_test, lr_predictions)* 100 : .2f}%")
+print(classification_report(y_test, lr_predictions))
+
