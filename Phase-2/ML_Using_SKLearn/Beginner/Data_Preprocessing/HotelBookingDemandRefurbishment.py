@@ -75,10 +75,10 @@ df=pd.get_dummies(df,columns=['hotel', 'meal', 'market_segment', 'distribution_c
 X= df.drop(columns=['is_canceled','arrival_date', 'country','reservation_status'])
 y=df['is_canceled']
 X = X.astype(float)
-print(df.info())
-print(df.head(15))
-print(f"Missing values: {df.isnull().sum()}")
-print(f"duplicated values: {df.duplicated().sum()}")
+#print(df.info())
+#print(df.head(15))
+#print(f"Missing values: {df.isnull().sum()}")
+#print(f"duplicated values: {df.duplicated().sum()}")
 
 x_train, x_test,y_train, y_test = train_test_split(X,y, test_size=0.2, random_state=42)
 print(f"Total data: {X.shape[0]}")
@@ -90,12 +90,12 @@ x_train_scaled = scalar.fit_transform(x_train)
 x_test_scaled = scalar.transform(x_test)
 
 Lr_model = LogisticRegression()
-lr_model = lr_model.fit(x_train_scaled, y_train)
-lr_predictions = lr_model.predict(x_test_Scaled)
+Lr_model = Lr_model.fit(x_train_scaled, y_train)
+Lr_predictions = Lr_model.predict(x_test_scaled)
 
 print("Logistic Regression Classification Report:")
-print(f"Accuracy: {accuracy_score(y_test, lr_predictions)* 100 : .2f}%")
-print(classification_report(y_test, lr_predictions))
+print(f"Accuracy: {accuracy_score(y_test, Lr_predictions)* 100 : .2f}%")
+print(classification_report(y_test, Lr_predictions))
 
 rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
 rf_model = rf_model.fit(x_train_scaled, y_train)
@@ -104,3 +104,9 @@ rf_predictions = rf_model.predict(x_test_scaled)
 print("Random Forest Classification Report:")
 print(f"Accuracy: {accuracy_score(y_test, rf_predictions)* 100 : .2f}%")
 print(classification_report(y_test, rf_predictions))
+
+importances = rf_model.feature_importances_
+feature_names = X.columns
+feature_importance_df = pd.DataFrame({'Feature' : feature_names, 'Importance': importances})
+print(feature_importance_df.head(10))
+
