@@ -7,6 +7,7 @@ from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
+from sklearn.preprocessing import StandardScaler
 
 df = pd.read_csv('diabetes.csv')
 #print(df.describe())
@@ -17,9 +18,9 @@ df = pd.read_csv('diabetes.csv')
 cols_with_zero = ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']
 df[cols_with_zero] = df[cols_with_zero].replace(0,np.nan)
 print(f"missing values: { df.isnull().sum()}")
-print(df.describe())
-print(df.info())
-print(df.head(10))
+#print(df.describe())
+#print(df.info())
+#print(df.head(10))
 X = df.drop('Outcome', axis=1)
 Y = df['Outcome']
 # Simpler Imputer
@@ -52,8 +53,8 @@ datasets={
 print("Accuracy comparison:")
 
 for name,data in datasets.items():
-    scalar=StandardScalar()
+    scalar=StandardScaler()
     x_scaled=scalar.fit_transform(data)
     model=LogisticRegression()
-    score=cross_val_score(model,x_scaled,Y,cv=5)
+    score=cross_val_score(model,x_scaled,Y,cv=5).mean()
     print(f"{name} : {score.mean():.4f}")
