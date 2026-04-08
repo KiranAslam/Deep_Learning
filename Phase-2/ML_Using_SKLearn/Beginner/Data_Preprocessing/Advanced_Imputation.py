@@ -5,7 +5,8 @@ from sklearn.impute import KNNImputer
 from sklearn.impute import SimpleImputer
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
-
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
 
 df = pd.read_csv('diabetes.csv')
 #print(df.describe())
@@ -41,3 +42,18 @@ compare_insulin = pd.DataFrame({
     'Interative' : df_tier['Insulin'].head(10).values
 })
 print(compare_insulin)
+
+datasets={
+    'Simpler': df_simple,
+    'Knn_imputer': df_knn,
+    'Iterative': df_tier
+}
+
+print("Accuracy comparison:")
+
+for name,data in datasets.items():
+    scalar=StandardScalar()
+    x_scaled=scalar.fit_transform(data)
+    model=LogisticRegression()
+    score=cross_val_score(model,x_scaled,Y,cv=5)
+    print(f"{name} : {score.mean():.4f}")
