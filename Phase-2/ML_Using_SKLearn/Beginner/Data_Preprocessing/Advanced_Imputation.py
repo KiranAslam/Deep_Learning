@@ -32,9 +32,11 @@ X_knn = knn_imputer.fit_transform(X)
 # Iterative Imputer
 iterative_imputer = IterativeImputer(max_iter=10, random_state=42)
 X_tier = iterative_imputer.fit_transform(X)
+
 df_simple = pd.DataFrame(X_simpler,columns=X.columns)
 df_knn = pd.DataFrame(X_knn,columns=X.columns)
 df_tier = pd.DataFrame(X_tier,columns=X.columns)
+
 print("Insuline camparison")
 compare_insulin = pd.DataFrame({
     'original' : X['Insulin'].head(10).values,
