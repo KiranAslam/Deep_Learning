@@ -5,3 +5,5 @@ jupyter
 nnfs
 pandas
 seaborn
+category_encoders
+imbalanced-learn
